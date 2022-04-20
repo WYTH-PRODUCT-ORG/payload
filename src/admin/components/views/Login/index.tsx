@@ -1,21 +1,21 @@
+import { useAuth, useConfig } from '@payloadcms/config-provider';
 import React from 'react';
-import { Link, useHistory } from 'react-router-dom';
-import { useConfig, useAuth } from '@payloadcms/config-provider';
-import Logo from '../../graphics/Logo';
-import MinimalTemplate from '../../templates/Minimal';
-import Form from '../../forms/Form';
+import { Link, useNavigate } from 'react-router-dom';
+import Button from '../../elements/Button';
 import Email from '../../forms/field-types/Email';
 import Password from '../../forms/field-types/Password';
+import Form from '../../forms/Form';
 import FormSubmit from '../../forms/Submit';
-import Button from '../../elements/Button';
+import Logo from '../../graphics/Logo';
+import MinimalTemplate from '../../templates/Minimal';
 import Meta from '../../utilities/Meta';
-
 import './index.scss';
+
 
 const baseClass = 'login';
 
 const Login: React.FC = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { user, setToken } = useAuth();
   const {
     admin: {
@@ -35,7 +35,7 @@ const Login: React.FC = () => {
   const onSuccess = (data) => {
     if (data.token) {
       setToken(data.token);
-      history.push(admin);
+      navigate(admin);
     }
   };
 

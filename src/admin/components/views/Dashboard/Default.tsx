@@ -1,13 +1,12 @@
-import React from 'react';
-import { useHistory } from 'react-router-dom';
 import { useConfig } from '@payloadcms/config-provider';
-
-import Eyebrow from '../../elements/Eyebrow';
-import Card from '../../elements/Card';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Button from '../../elements/Button';
+import Card from '../../elements/Card';
+import Eyebrow from '../../elements/Eyebrow';
+import './index.scss';
 import { Props } from './types';
 
-import './index.scss';
 
 const baseClass = 'dashboard';
 
@@ -18,7 +17,7 @@ const Dashboard: React.FC<Props> = (props) => {
     permissions,
   } = props;
 
-  const { push } = useHistory();
+  const navigate = useNavigate();
 
   const {
     routes: {
@@ -46,7 +45,7 @@ const Dashboard: React.FC<Props> = (props) => {
               <li key={collection.slug}>
                 <Card
                   title={collection.labels.plural}
-                  onClick={() => push({ pathname: `${admin}/collections/${collection.slug}` })}
+                  onClick={() => navigate({ pathname: `${admin}/collections/${collection.slug}` })}
                   actions={hasCreatePermission ? (
                     <Button
                       el="link"
@@ -70,7 +69,7 @@ const Dashboard: React.FC<Props> = (props) => {
                 <li key={global.slug}>
                   <Card
                     title={global.label}
-                    onClick={() => push({ pathname: `${admin}/globals/${global.slug}` })}
+                    onClick={() => navigate({ pathname: `${admin}/globals/${global.slug}` })}
                   />
                 </li>
               ))}

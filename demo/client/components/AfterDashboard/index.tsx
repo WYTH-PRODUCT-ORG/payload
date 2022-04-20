@@ -1,19 +1,18 @@
 import { useConfig } from '@payloadcms/config-provider';
 import React from 'react';
-import { useHistory } from 'react-router-dom';
-
+import { useNavigate } from 'react-router-dom';
 // As this is the demo project, we import our dependencies from the `src` directory.
 import Card from '../../../../src/admin/components/elements/Card';
-
 // In your projects, you can import as follows:
 // import { Card } from 'payload/components/elements';
-
 import './index.scss';
+
+
 
 const baseClass = 'after-dashboard';
 
 const AfterDashboard: React.FC = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { routes: { admin: adminRoute } } = useConfig();
 
   return (
@@ -24,13 +23,13 @@ const AfterDashboard: React.FC = () => {
         <li>
           <Card
             title="Default Template"
-            onClick={() => history.push(`${adminRoute}/custom-default-route`)}
+            onClick={() => navigate(`${adminRoute}/custom-default-route`)}
           />
         </li>
         <li>
           <Card
             title="Minimal Template"
-            onClick={() => history.push(`${adminRoute}/custom-minimal-route`)}
+            onClick={() => navigate(`${adminRoute}/custom-minimal-route`)}
           />
         </li>
       </ul>

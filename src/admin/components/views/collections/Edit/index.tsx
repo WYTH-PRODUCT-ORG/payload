@@ -1,18 +1,18 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Redirect, useRouteMatch, useHistory, useLocation } from 'react-router-dom';
-import { useConfig, useAuth } from '@payloadcms/config-provider';
-import { useStepNav } from '../../../elements/StepNav';
+import { useAuth, useConfig } from '@payloadcms/config-provider';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Navigate, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import usePayloadAPI from '../../../../hooks/usePayloadAPI';
-
+import { useStepNav } from '../../../elements/StepNav';
+import { StepNavItem } from '../../../elements/StepNav/types';
+import { NegativeFieldGutterProvider } from '../../../forms/FieldTypeGutter/context';
+import buildStateFromSchema from '../../../forms/Form/buildStateFromSchema';
+import { useDocumentInfo } from '../../../utilities/DocumentInfo';
+import { useLocale } from '../../../utilities/Locale';
 import RenderCustomComponent from '../../../utilities/RenderCustomComponent';
 import DefaultEdit from './Default';
 import formatFields from './formatFields';
-import buildStateFromSchema from '../../../forms/Form/buildStateFromSchema';
-import { NegativeFieldGutterProvider } from '../../../forms/FieldTypeGutter/context';
-import { useLocale } from '../../../utilities/Locale';
 import { IndexProps } from './types';
-import { StepNavItem } from '../../../elements/StepNav/types';
-import { useDocumentInfo } from '../../../utilities/DocumentInfo';
+
 
 const EditView: React.FC<IndexProps> = (props) => {
   const { collection: incomingCollection, isEditing } = props;
@@ -37,9 +37,10 @@ const EditView: React.FC<IndexProps> = (props) => {
 
   const locale = useLocale();
   const { serverURL, routes: { admin, api } } = useConfig();
-  const { params: { id } = {} } = useRouteMatch<Record<string, string>>();
+  const [params, setParams] = useSearchParams()
+  const id = params.get('id')
   const { state: locationState } = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const { setStepNav } = useStepNav();
   const [initialState, setInitialState] = useState({});
   const { permissions, user } = useAuth();
@@ -48,7 +49,7 @@ const EditView: React.FC<IndexProps> = (props) => {
   const onSave = useCallback(async (json: any) => {
     getVersions();
     if (!isEditing) {
-      history.push(`${admin}/collections/${collection.slug}/${json?.doc?.id}`);
+      navigate(`${admin}/collections/${collection.slug}/${json?.doc?.id}`);
     } else {
       const state = await buildStateFromSchema({ fieldSchema: collection.fields, data: json.doc, user, id, operation: 'update' });
       setInitialState(state);
@@ -106,7 +107,7 @@ const EditView: React.FC<IndexProps> = (props) => {
 
   if (isError) {
     return (
-      <Redirect to={`${admin}/not-found`} />
+      <Navigate to={`${admin}/not-found`} />
     );
   }
 

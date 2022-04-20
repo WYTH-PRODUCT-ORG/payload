@@ -1,29 +1,27 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-import React, {
-  useReducer, useEffect, useRef, useState, useCallback,
-} from 'react';
+import { useAuth } from '@payloadcms/config-provider';
 import isDeepEqual from 'deep-equal';
 import { serialize } from 'object-to-formdata';
-import { useHistory } from 'react-router-dom';
+import React, { useCallback, useEffect, useReducer, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { useAuth } from '@payloadcms/config-provider';
-import { useLocale } from '../../utilities/Locale';
-import { useDocumentInfo } from '../../utilities/DocumentInfo';
+import { Field } from '../../../../fields/config/types';
+import wait from '../../../../utilities/wait';
 import { requests } from '../../../api';
 import useThrottledEffect from '../../../hooks/useThrottledEffect';
+import { useDocumentInfo } from '../../utilities/DocumentInfo';
+import { useLocale } from '../../utilities/Locale';
+import { useOperation } from '../../utilities/OperationProvider';
+import buildInitialState from './buildInitialState';
+import buildStateFromSchema from './buildStateFromSchema';
+import { FormContext, FormWatchContext, ModifiedContext, ProcessingContext, SubmittedContext } from './context';
+import errorMessages from './errorMessages';
 import fieldReducer from './fieldReducer';
+import getDataByPathFunc from './getDataByPath';
+import getSiblingDataFunc from './getSiblingData';
 import initContextState from './initContextState';
 import reduceFieldsToValues from './reduceFieldsToValues';
-import getSiblingDataFunc from './getSiblingData';
-import getDataByPathFunc from './getDataByPath';
-import wait from '../../../../utilities/wait';
-import { Field } from '../../../../fields/config/types';
-import buildInitialState from './buildInitialState';
-import errorMessages from './errorMessages';
 import { Context as FormContextType, GetDataByPath, Props, SubmitOptions } from './types';
-import { SubmittedContext, ProcessingContext, ModifiedContext, FormContext, FormWatchContext } from './context';
-import buildStateFromSchema from './buildStateFromSchema';
-import { useOperation } from '../../utilities/OperationProvider';
 
 const baseClass = 'form';
 
@@ -45,7 +43,7 @@ const Form: React.FC<Props> = (props) => {
     log,
   } = props;
 
-  const history = useHistory();
+  const navigate = useNavigate();
   const locale = useLocale();
   const { refreshCookie, user } = useAuth();
   const { id } = useDocumentInfo();
@@ -206,7 +204,7 @@ const Form: React.FC<Props> = (props) => {
             };
           }
 
-          history.push(destination);
+          navigate(destination);
         } else if (!disableSuccessStatus) {
           toast.success(json.message || 'Submission successful.', { autoClose: 3000 });
         }

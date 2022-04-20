@@ -1,14 +1,14 @@
-import React from 'react';
-import { useHistory } from 'react-router-dom';
 import queryString from 'qs';
-import { Props, Node } from './types';
-
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useSearchParams } from '../../utilities/SearchParams';
+import ClickableArrow from './ClickableArrow';
+import './index.scss';
 import Page from './Page';
 import Separator from './Separator';
-import ClickableArrow from './ClickableArrow';
-import { useSearchParams } from '../../utilities/SearchParams';
+import { Node, Props } from './types';
 
-import './index.scss';
+
 
 const nodeTypes = {
   Page,
@@ -19,7 +19,7 @@ const nodeTypes = {
 const baseClass = 'paginator';
 
 const Pagination: React.FC<Props> = (props) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const params = useSearchParams();
 
   const {
@@ -44,7 +44,7 @@ const Pagination: React.FC<Props> = (props) => {
       };
 
       newParams.page = page;
-      history.push({ search: queryString.stringify(newParams, { addQueryPrefix: true }) });
+      navigate({ search: queryString.stringify(newParams, { addQueryPrefix: true }) });
     }
 
     if (typeof onChange === 'function') onChange(page);

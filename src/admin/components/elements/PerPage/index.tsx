@@ -1,12 +1,12 @@
-import React from 'react';
 import qs from 'qs';
-import { useHistory } from 'react-router-dom';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { defaults } from '../../../../collections/config/defaults';
+import Chevron from '../../icons/Chevron';
 import { useSearchParams } from '../../utilities/SearchParams';
 import Popup from '../Popup';
-import Chevron from '../../icons/Chevron';
-import { defaults } from '../../../../collections/config/defaults';
-
 import './index.scss';
+
 
 const baseClass = 'per-page';
 
@@ -21,7 +21,7 @@ type Props = {
 
 const PerPage: React.FC<Props> = ({ limits = defaultLimits, limit, handleChange, modifySearchParams = true }) => {
   const params = useSearchParams();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   return (
     <div className={baseClass}>
@@ -54,7 +54,7 @@ const PerPage: React.FC<Props> = ({ limits = defaultLimits, limit, handleChange,
                       close();
                       if (handleChange) handleChange(limitNumber);
                       if (modifySearchParams) {
-                        history.replace({
+                        navigate({
                           search: qs.stringify({
                             ...params,
                             limit: limitNumber,

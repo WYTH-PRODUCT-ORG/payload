@@ -1,18 +1,18 @@
-import React, { useState, useReducer } from 'react';
 import queryString from 'qs';
-import { useHistory } from 'react-router-dom';
-import { Props } from './types';
+import React, { useReducer, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Where } from '../../../../types';
+import flattenTopLevelFields from '../../../../utilities/flattenTopLevelFields';
 import useThrottledEffect from '../../../hooks/useThrottledEffect';
+import { useSearchParams } from '../../utilities/SearchParams';
 import Button from '../Button';
-import reducer from './reducer';
 import Condition from './Condition';
 import fieldTypes from './field-types';
-import flattenTopLevelFields from '../../../../utilities/flattenTopLevelFields';
-import { useSearchParams } from '../../utilities/SearchParams';
-import validateWhereQuery from './validateWhereQuery';
-import { Where } from '../../../../types';
-
 import './index.scss';
+import reducer from './reducer';
+import { Props } from './types';
+import validateWhereQuery from './validateWhereQuery';
+
 
 const baseClass = 'where-builder';
 
@@ -48,8 +48,9 @@ const WhereBuilder: React.FC<Props> = (props) => {
     } = {},
   } = props;
 
-  const history = useHistory();
+  const navigate = useNavigate();
   const params = useSearchParams();
+  const location = useLocation()
 
   const [conditions, dispatchConditions] = useReducer(reducer, params.where, (whereFromSearch) => {
     if (modifySearchQuery && validateWhereQuery(whereFromSearch)) {
@@ -62,7 +63,7 @@ const WhereBuilder: React.FC<Props> = (props) => {
   const [reducedFields] = useState(() => reduceFields(collection.fields));
 
   useThrottledEffect(() => {
-    const currentParams = queryString.parse(history.location.search, { ignoreQueryPrefix: true, depth: 10 });
+    const currentParams = queryString.parse(location.search, { ignoreQueryPrefix: true, depth: 10 });
 
     const newWhereQuery = {
       ...typeof currentParams?.where === 'object' ? currentParams.where : {},
@@ -72,7 +73,7 @@ const WhereBuilder: React.FC<Props> = (props) => {
     if (handleChange) handleChange(newWhereQuery as Where);
 
     if (modifySearchQuery) {
-      history.replace({
+      navigate({
         search: queryString.stringify({
           ...currentParams,
           page: 1,

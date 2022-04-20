@@ -1,20 +1,20 @@
-import React, { Fragment, useCallback, useState } from 'react';
-import { toast } from 'react-toastify';
 import { Modal, useModal } from '@faceless-ui/modal';
 import { useConfig } from '@payloadcms/config-provider';
-import { useHistory } from 'react-router-dom';
+import React, { Fragment, useCallback, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { Button, MinimalTemplate, Pill } from '../../..';
-import { Props } from './types';
 import { requests } from '../../../../api';
-
 import './index.scss';
+import { Props } from './types';
+
 
 const baseClass = 'restore-version';
 const modalSlug = 'restore-version';
 
 const Restore: React.FC<Props> = ({ collection, global, className, versionID, originalDocID, versionDate }) => {
   const { serverURL, routes: { api, admin } } = useConfig();
-  const history = useHistory();
+  const navigate = useNavigate();
   const { toggle } = useModal();
   const [processing, setProcessing] = useState(false);
 
@@ -42,7 +42,7 @@ const Restore: React.FC<Props> = ({ collection, global, className, versionID, or
     if (res.status === 200) {
       const json = await res.json();
       toast.success(json.message);
-      history.push(redirectURL);
+      navigate(redirectURL);
     } else {
       toast.error('There was a problem while restoring this version.');
     }

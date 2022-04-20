@@ -1,33 +1,35 @@
-import React, { useEffect, useState } from 'react';
 import { useAuth, useConfig } from '@payloadcms/config-provider';
-import { useRouteMatch } from 'react-router-dom';
 import format from 'date-fns/format';
+import React, { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { FieldPermissions } from '../../../../auth';
+import { Field, FieldAffectingData, fieldAffectsData } from '../../../../fields/config/types';
 import usePayloadAPI from '../../../hooks/usePayloadAPI';
 import Eyebrow from '../../elements/Eyebrow';
 import Loading from '../../elements/Loading';
 import { useStepNav } from '../../elements/StepNav';
 import { StepNavItem } from '../../elements/StepNav/types';
+import { useLocale } from '../../utilities/Locale';
 import Meta from '../../utilities/Meta';
-import { LocaleOption, CompareOption, Props } from './types';
 import CompareVersion from './Compare';
-import { mostRecentVersionOption } from './shared';
-import Restore from './Restore';
-import SelectLocales from './SelectLocales';
+import './index.scss';
 import RenderFieldsToDiff from './RenderFieldsToDiff';
 import fieldComponents from './RenderFieldsToDiff/fields';
+import Restore from './Restore';
+import SelectLocales from './SelectLocales';
+import { mostRecentVersionOption } from './shared';
+import { CompareOption, LocaleOption, Props } from './types';
 
-import { Field, FieldAffectingData, fieldAffectsData } from '../../../../fields/config/types';
-import { FieldPermissions } from '../../../../auth';
-import { useLocale } from '../../utilities/Locale';
 
-import './index.scss';
 
 const baseClass = 'view-version';
 
 const VersionView: React.FC<Props> = ({ collection, global }) => {
   const { serverURL, routes: { admin, api }, admin: { dateFormat }, localization } = useConfig();
   const { setStepNav } = useStepNav();
-  const { params: { id, versionID } } = useRouteMatch<{ id?: string, versionID: string }>();
+  const [params, setParams] = useSearchParams()
+  const id = params.get('id')
+  const versionID = params.get('versionID')
   const [compareValue, setCompareValue] = useState<CompareOption>(mostRecentVersionOption);
   const [localeOptions] = useState<LocaleOption[]>(() => (localization?.locales ? localization.locales.map((locale) => ({ label: locale, value: locale })) : []));
   const [locales, setLocales] = useState<LocaleOption[]>(localeOptions);

@@ -1,18 +1,18 @@
-import React from 'react';
-import { useHistory } from 'react-router-dom';
-import { useModal, Modal } from '@faceless-ui/modal';
+import { Modal, useModal } from '@faceless-ui/modal';
 import { useConfig } from '@payloadcms/config-provider';
-import MinimalTemplate from '../../templates/Minimal';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Button from '../../elements/Button';
+import MinimalTemplate from '../../templates/Minimal';
+import './index.scss';
 import { Props } from './types';
 
-import './index.scss';
 
 const baseClass = 'stay-logged-in';
 
 const StayLoggedInModal: React.FC<Props> = (props) => {
   const { refreshCookie } = props;
-  const history = useHistory();
+  const navigate = useNavigate();
   const { routes: { admin } } = useConfig();
   const { closeAll: closeAllModals } = useModal();
 
@@ -29,7 +29,7 @@ const StayLoggedInModal: React.FC<Props> = (props) => {
             buttonStyle="secondary"
             onClick={() => {
               closeAllModals();
-              history.push(`${admin}/logout`);
+              navigate(`${admin}/logout`);
             }}
           >
             Log out

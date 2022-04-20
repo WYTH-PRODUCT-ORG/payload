@@ -1,16 +1,15 @@
 import { useConfig } from '@payloadcms/config-provider';
 import { formatDistance } from 'date-fns';
-import { useHistory } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { useWatchForm, useFormModified } from '../../forms/Form/context';
-import { useLocale } from '../../utilities/Locale';
-import { Props } from './types';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import useDebounce from '../../../hooks/useDebounce';
+import { useFormModified, useWatchForm } from '../../forms/Form/context';
 import reduceFieldsToValues from '../../forms/Form/reduceFieldsToValues';
 import { useDocumentInfo } from '../../utilities/DocumentInfo';
-import useDebounce from '../../../hooks/useDebounce';
-
+import { useLocale } from '../../utilities/Locale';
 import './index.scss';
+import { Props } from './types';
 
 const baseClass = 'autosave';
 
@@ -20,7 +19,7 @@ const Autosave: React.FC<Props> = ({ collection, global, id, publishedDocUpdated
   const { fields, dispatchFields } = useWatchForm();
   const modified = useFormModified();
   const locale = useLocale();
-  const { replace } = useHistory();
+  const navigate = useNavigate();
 
   let interval = 800;
   if (collection?.versions.drafts && collection.versions?.drafts?.autosave) interval = collection.versions.drafts.autosave.interval;
@@ -47,7 +46,7 @@ const Autosave: React.FC<Props> = ({ collection, global, id, publishedDocUpdated
 
     if (res.status === 201) {
       const json = await res.json();
-      replace(`${admin}/collections/${collection.slug}/${json.doc.id}`, {
+      navigate(`${admin}/collections/${collection.slug}/${json.doc.id}`, {
         state: {
           data: json.doc,
         },
@@ -55,7 +54,7 @@ const Autosave: React.FC<Props> = ({ collection, global, id, publishedDocUpdated
     } else {
       toast.error('There was a problem while autosaving this document.');
     }
-  }, [collection, serverURL, api, admin, locale, replace]);
+  }, [collection, serverURL, api, admin, locale, navigate]);
 
   useEffect(() => {
     // If no ID, but this is used for a collection doc,

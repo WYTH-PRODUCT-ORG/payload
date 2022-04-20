@@ -1,19 +1,19 @@
-import React, { Fragment } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
 import { useConfig } from '@payloadcms/config-provider';
-import UploadGallery from '../../../elements/UploadGallery';
-import Eyebrow from '../../../elements/Eyebrow';
-import Paginator from '../../../elements/Paginator';
-import ListControls from '../../../elements/ListControls';
-import Pill from '../../../elements/Pill';
+import React, { Fragment } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Button from '../../../elements/Button';
+import Eyebrow from '../../../elements/Eyebrow';
+import ListControls from '../../../elements/ListControls';
+import Paginator from '../../../elements/Paginator';
+import PerPage from '../../../elements/PerPage';
+import Pill from '../../../elements/Pill';
 import Table from '../../../elements/Table';
+import UploadGallery from '../../../elements/UploadGallery';
+import ViewDescription from '../../../elements/ViewDescription';
 import Meta from '../../../utilities/Meta';
+import './index.scss';
 import { Props } from './types';
 
-import './index.scss';
-import ViewDescription from '../../../elements/ViewDescription';
-import PerPage from '../../../elements/PerPage';
 
 const baseClass = 'collection-list';
 
@@ -41,7 +41,7 @@ const DefaultList: React.FC<Props> = (props) => {
   } = props;
 
   const { routes: { admin } } = useConfig();
-  const history = useHistory();
+  const navigate = useNavigate();
   const { pathname, search } = useLocation();
 
   return (

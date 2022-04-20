@@ -1,30 +1,30 @@
+import { useAuth, useConfig } from '@payloadcms/config-provider';
 import React from 'react';
-import { Link, useHistory, useParams } from 'react-router-dom';
-import { useConfig, useAuth } from '@payloadcms/config-provider';
-import MinimalTemplate from '../../templates/Minimal';
-import Form from '../../forms/Form';
-import Password from '../../forms/field-types/Password';
-import ConfirmPassword from '../../forms/field-types/ConfirmPassword';
-import FormSubmit from '../../forms/Submit';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import Button from '../../elements/Button';
-import Meta from '../../utilities/Meta';
-
-
-import './index.scss';
+import ConfirmPassword from '../../forms/field-types/ConfirmPassword';
 import HiddenInput from '../../forms/field-types/HiddenInput';
+import Password from '../../forms/field-types/Password';
+import Form from '../../forms/Form';
+import FormSubmit from '../../forms/Submit';
+import MinimalTemplate from '../../templates/Minimal';
+import Meta from '../../utilities/Meta';
+import './index.scss';
+
+
 
 const baseClass = 'reset-password';
 
 const ResetPassword: React.FC = () => {
   const { admin: { user: userSlug }, serverURL, routes: { admin, api } } = useConfig();
-  const { token } = useParams<{token?: string}>();
-  const history = useHistory();
+  const { token } = useParams<{ token?: string }>();
+  const navigate = useNavigate();
   const { user, setToken } = useAuth();
 
   const onSuccess = (data) => {
     if (data.token) {
       setToken(data.token);
-      history.push(`${admin}`);
+      navigate(`${admin}`);
     }
   };
 

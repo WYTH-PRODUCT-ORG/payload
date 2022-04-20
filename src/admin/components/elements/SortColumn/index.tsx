@@ -1,12 +1,12 @@
-import React, { useCallback } from 'react';
-import { useHistory } from 'react-router-dom';
 import queryString from 'qs';
-import { Props } from './types';
+import React, { useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Chevron from '../../icons/Chevron';
-import Button from '../Button';
-
-import './index.scss';
 import { useSearchParams } from '../../utilities/SearchParams';
+import Button from '../Button';
+import './index.scss';
+import { Props } from './types';
+
 
 const baseClass = 'sort-column';
 
@@ -15,7 +15,7 @@ const SortColumn: React.FC<Props> = (props) => {
     label, name, disable = false,
   } = props;
   const params = useSearchParams();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const { sort } = params;
 
@@ -29,7 +29,7 @@ const SortColumn: React.FC<Props> = (props) => {
   if (sort === desc) descClasses.push(`${baseClass}--active`);
 
   const setSort = useCallback((newSort) => {
-    history.push({
+    navigate({
       search: queryString.stringify({
         ...params,
         sort: newSort,

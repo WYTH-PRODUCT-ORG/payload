@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
 import queryString from 'qs';
-import { useHistory } from 'react-router-dom';
-import { Props } from './types';
-import ReactSelect from '../ReactSelect';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { fieldAffectsData } from '../../../../fields/config/types';
 import sortableFieldTypes from '../../../../fields/sortableFieldTypes';
 import { useSearchParams } from '../../utilities/SearchParams';
-import { fieldAffectsData } from '../../../../fields/config/types';
-
+import ReactSelect from '../ReactSelect';
 import './index.scss';
+import { Props } from './types';
+
 
 const baseClass = 'sort-complex';
 
@@ -20,7 +20,7 @@ const SortComplex: React.FC<Props> = (props) => {
     handleChange,
   } = props;
 
-  const history = useHistory();
+  const navigate = useNavigate();
   const params = useSearchParams();
 
   const [sortFields] = useState(() => collection.fields.reduce((fields, field) => {
@@ -43,7 +43,7 @@ const SortComplex: React.FC<Props> = (props) => {
       if (handleChange) handleChange(newSortValue);
 
       if (params.sort !== newSortValue && modifySearchQuery) {
-        history.replace({
+        navigate({
           search: queryString.stringify({
             ...params,
             sort: newSortValue,

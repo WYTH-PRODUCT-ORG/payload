@@ -1,20 +1,20 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { useConfig, useAuth } from '@payloadcms/config-provider';
-import { useHistory } from 'react-router-dom';
+import { useAuth, useConfig } from '@payloadcms/config-provider';
 import queryString from 'qs';
-
-import usePayloadAPI from '../../../../hooks/usePayloadAPI';
-import DefaultList from './Default';
-import RenderCustomComponent from '../../../utilities/RenderCustomComponent';
-import { useStepNav } from '../../../elements/StepNav';
-import formatFields from './formatFields';
-import buildColumns from './buildColumns';
-import { ListIndexProps, ListPreferences } from './types';
-import { usePreferences } from '../../../utilities/Preferences';
-import { useSearchParams } from '../../../utilities/SearchParams';
-import { Column } from '../../../elements/Table/types';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Field } from '../../../../../fields/config/types';
+import usePayloadAPI from '../../../../hooks/usePayloadAPI';
+import { useStepNav } from '../../../elements/StepNav';
+import { Column } from '../../../elements/Table/types';
+import { usePreferences } from '../../../utilities/Preferences';
+import RenderCustomComponent from '../../../utilities/RenderCustomComponent';
+import { useSearchParams } from '../../../utilities/SearchParams';
+import buildColumns from './buildColumns';
+import DefaultList from './Default';
+import formatFields from './formatFields';
 import getInitialColumns from './getInitialColumns';
+import { ListIndexProps, ListPreferences } from './types';
+
 
 const ListView: React.FC<ListIndexProps> = (props) => {
   const {
@@ -45,7 +45,8 @@ const ListView: React.FC<ListIndexProps> = (props) => {
   const { setStepNav } = useStepNav();
   const { getPreference, setPreference } = usePreferences();
   const { page, sort, limit, where } = useSearchParams();
-  const history = useHistory();
+  const navigate = useNavigate();
+  const location = useLocation()
 
   const [fetchURL, setFetchURL] = useState<string>('');
   const [fields] = useState<Field[]>(() => formatFields(collection));
@@ -107,7 +108,7 @@ const ListView: React.FC<ListIndexProps> = (props) => {
         setTableColumns(buildColumns(collection, currentPreferences?.columns));
       }
 
-      const params = queryString.parse(history.location.search, { ignoreQueryPrefix: true, depth: 10 });
+      const params = queryString.parse(location.search, { ignoreQueryPrefix: true, depth: 10 });
 
       const search = {
         ...params,
@@ -118,7 +119,7 @@ const ListView: React.FC<ListIndexProps> = (props) => {
       const newSearchQuery = queryString.stringify(search, { addQueryPrefix: true });
 
       if (newSearchQuery.length > 1) {
-        history.replace({
+        navigate({
           search: newSearchQuery,
         });
       }

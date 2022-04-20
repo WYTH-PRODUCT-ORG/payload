@@ -1,24 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import { NavLink, Link, useHistory } from 'react-router-dom';
-import { useConfig, useAuth } from '@payloadcms/config-provider';
-
-import RenderCustomComponent from '../../utilities/RenderCustomComponent';
+import { useAuth, useConfig } from '@payloadcms/config-provider';
+import React, { useEffect, useState } from 'react';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
+import Account from '../../graphics/Account';
+import Icon from '../../graphics/Icon';
 import Chevron from '../../icons/Chevron';
+import CloseMenu from '../../icons/CloseMenu';
 import LogOut from '../../icons/LogOut';
 import Menu from '../../icons/Menu';
-import CloseMenu from '../../icons/CloseMenu';
-import Icon from '../../graphics/Icon';
-import Account from '../../graphics/Account';
+import RenderCustomComponent from '../../utilities/RenderCustomComponent';
 import Localizer from '../Localizer';
-
 import './index.scss';
+
+
 
 const baseClass = 'nav';
 
 const DefaultNav = () => {
   const { permissions } = useAuth();
   const [menuActive, setMenuActive] = useState(false);
-  const history = useHistory();
+  const navigate = useNavigate();
   const {
     collections,
     globals,
@@ -75,7 +75,7 @@ const DefaultNav = () => {
               if (permissions?.collections?.[collection.slug]?.read.permission) {
                 return (
                   <NavLink
-                    activeClassName="active"
+                    className={({ isActive }) => isActive ? "active" : ''}
                     key={i}
                     to={href}
                   >
@@ -98,7 +98,7 @@ const DefaultNav = () => {
                   if (permissions?.globals?.[global.slug].read.permission) {
                     return (
                       <NavLink
-                        activeClassName="active"
+                        className={({ isActive }) => isActive ? "active" : ''}
                         key={i}
                         to={href}
                       >

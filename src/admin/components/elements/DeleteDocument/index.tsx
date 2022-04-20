@@ -1,16 +1,16 @@
-import React, { useState, useCallback } from 'react';
-import { toast } from 'react-toastify';
-import { useHistory } from 'react-router-dom';
 import { Modal, useModal } from '@faceless-ui/modal';
 import { useConfig } from '@payloadcms/config-provider';
-import Button from '../Button';
-import MinimalTemplate from '../../templates/Minimal';
-import { useForm } from '../../forms/Form/context';
-import useTitle from '../../../hooks/useTitle';
+import React, { useCallback, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { requests } from '../../../api';
+import useTitle from '../../../hooks/useTitle';
+import { useForm } from '../../forms/Form/context';
+import MinimalTemplate from '../../templates/Minimal';
+import Button from '../Button';
+import './index.scss';
 import { Props } from './types';
 
-import './index.scss';
 
 const baseClass = 'delete-document';
 
@@ -33,7 +33,7 @@ const DeleteDocument: React.FC<Props> = (props) => {
   const { setModified } = useForm();
   const [deleting, setDeleting] = useState(false);
   const { closeAll, toggle } = useModal();
-  const history = useHistory();
+  const navigate = useNavigate();
   const title = useTitle(useAsTitle) || id;
   const titleToRender = titleFromProps || title;
 
@@ -56,7 +56,7 @@ const DeleteDocument: React.FC<Props> = (props) => {
         if (res.status < 400) {
           closeAll();
           toast.success(`${singular} "${title}" successfully deleted.`);
-          return history.push(`${admin}/collections/${slug}`);
+          return navigate(`${admin}/collections/${slug}`);
         }
 
         closeAll();
@@ -70,7 +70,7 @@ const DeleteDocument: React.FC<Props> = (props) => {
         return addDefaultError();
       }
     });
-  }, [addDefaultError, closeAll, history, id, singular, slug, title, admin, api, serverURL, setModified]);
+  }, [addDefaultError, closeAll, navigate, id, singular, slug, title, admin, api, serverURL, setModified]);
 
   if (id) {
     return (

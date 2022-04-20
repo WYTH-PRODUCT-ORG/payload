@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
 import queryString from 'qs';
-import { Props } from './types';
-import Search from '../../icons/Search';
-import useDebounce from '../../../hooks/useDebounce';
-import { useSearchParams } from '../../utilities/SearchParams';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Where } from '../../../../types';
-
+import useDebounce from '../../../hooks/useDebounce';
+import Search from '../../icons/Search';
+import { useSearchParams } from '../../utilities/SearchParams';
 import './index.scss';
+import { Props } from './types';
+
 
 const baseClass = 'search-filter';
 
@@ -20,7 +20,7 @@ const SearchFilter: React.FC<Props> = (props) => {
   } = props;
 
   const params = useSearchParams();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const [search, setSearch] = useState(() => params?.where?.[fieldName]?.like || '');
 
@@ -42,7 +42,7 @@ const SearchFilter: React.FC<Props> = (props) => {
       if (handleChange) handleChange(newWhere as Where);
 
       if (modifySearchQuery && params?.where?.[fieldName]?.like !== newWhere?.[fieldName]?.like) {
-        history.replace({
+        navigate({
           search: queryString.stringify({
             ...params,
             page: 1,
