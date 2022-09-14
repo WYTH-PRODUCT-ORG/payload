@@ -103,7 +103,7 @@ const uploadFile = async ({
               dimensions,
               staticPath,
               config: collectionConfig,
-              savedFilename: fsSafeName,
+              savedFilename: fsSafeName || file.name,
               mimeType: fileData.mimeType,
             });
           }
