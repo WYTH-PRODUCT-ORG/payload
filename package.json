@@ -1,5 +1,5 @@
 {
-  "name": "payload",
+  "name": "@wythlive/payload",
   "version": "1.1.1",
   "description": "Node, React and MongoDB Headless CMS and Application Framework",
   "license": "MIT",
